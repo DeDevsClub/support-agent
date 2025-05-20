@@ -1,10 +1,13 @@
-export async function POST(
-  request: Request,
-  { params }: { params: { order_id: string } }
-) {
+export async function POST(request: Request) {
   try {
-    const { order_id } = params;
+    // Extract order_id from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const order_id = pathParts[pathParts.indexOf('orders') + 1];
+    
+    // Get request data
     const { amount, reason } = await request.json();
+    
     // Simulate refund creation
     return new Response(
       JSON.stringify({
@@ -15,6 +18,9 @@ export async function POST(
     );
   } catch (error) {
     console.error("Error creating refund:", error);
-    return new Response("Error creating refund", { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "Error creating refund" }),
+      { status: 500 }
+    );
   }
 }

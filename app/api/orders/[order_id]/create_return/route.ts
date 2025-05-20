@@ -1,20 +1,26 @@
-export async function POST(
-  request: Request,
-  { params }: { params: { order_id: string } }
-) {
+export async function POST(request: Request) {
   try {
-    const { order_id } = params;
+    // Extract order_id from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const order_id = pathParts[pathParts.indexOf('orders') + 1];
+    
+    // Get request data
     const { product_ids } = await request.json();
+    
     // Simulate return initiation
     return new Response(
       JSON.stringify({
         message: `Return initiated for order ${order_id}`,
-        product_ids,
+        product_ids,  
       }),
       { status: 200 }
     );
   } catch (error) {
     console.error("Error creating return:", error);
-    return new Response("Error creating return", { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "Error creating return" }),
+      { status: 500 }
+    );
   }
 }
