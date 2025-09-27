@@ -1,18 +1,11 @@
-export async function POST(
-  request: Request,
-  { params }: { params: { user_id: string } }
-) {
-  try {
-    const { user_id } = params;
-    // Simulate sending a reset password email
-    return new Response(
-      JSON.stringify({
-        message: `Password reset email sent to user ${user_id}`,
-      }),
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error resetting password:", error);
-    return new Response("Error resetting password", { status: 500 });
-  }
-}
+import { createApiRoute, getDynamicParam, jsonResponse } from "@/lib/api-utils";
+
+export const POST = createApiRoute(async (request: Request) => {
+  // Extract user_id from the URL path
+  const user_id = getDynamicParam(request, 'users');
+  
+  // Simulate sending a reset password email
+  return jsonResponse({
+    message: `Password reset email sent to user ${user_id}`,
+  });
+});

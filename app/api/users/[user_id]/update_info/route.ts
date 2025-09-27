@@ -1,21 +1,16 @@
-export async function POST(
-  request: Request,
-  { params }: { params: { user_id: string } }
-) {
-  try {
-    const { user_id } = params;
-    const { info } = await request.json();
-    // Simulate updating user information
-    return new Response(
-      JSON.stringify({
-        message: `User ${user_id} info updated`,
-        updatedField: info.field,
-        newValue: info.value,
-      }),
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error updating user info:", error);
-    return new Response("Error updating user info", { status: 500 });
-  }
-}
+import { createApiRoute, getDynamicParam, jsonResponse } from "@/lib/api-utils";
+
+export const POST = createApiRoute(async (request: Request) => {
+  // Extract user_id from the URL path
+  const user_id = getDynamicParam(request, 'users');
+  
+  // Get request data
+  const { info } = await request.json();
+  
+  // Simulate updating user information
+  return jsonResponse({
+    message: `User ${user_id} info updated`,
+    updatedField: info.field,
+    newValue: info.value,
+  });
+});
